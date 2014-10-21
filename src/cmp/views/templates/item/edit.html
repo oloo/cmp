@@ -1,0 +1,91 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend>Edit Item</legend>
+          <div class="control-group">  
+            <label class="control-label" for="itemid">Item Id</label>  
+            <div class="controls">  
+              <span id="id">{{id}}</span>  
+              <p class="help-block">System generated Id, this cannot be edited!</p>  
+            </div>  
+          </div>
+          <div class="control-group">  
+            <label class="control-label" for="itemcode">Item Code</label>  
+            <div class="controls">  
+              <input type="text" value="{{code}}" class="input-xlarge" id="itemcode">  
+            </div>  
+          </div>
+            <div class="control-group">  
+            <label class="control-label" for="itemname">Item Name</label>  
+            <div class="controls">  
+              <input type="text" value="{{name}}" class="input-xlarge" id="itemname">  
+            </div>  
+          </div>
+          <div class="control-group">  
+            <label class="control-label" for="level">Pack Size</label>  
+            <div class="controls">  
+			  <input type="text" value="{{packsize}}" class="input-xlarge" id="packsize">
+  			</div>   
+          </div>
+           <div class="control-group">  
+            <label class="control-label" for="district">Unit Cost</label>  
+            <div class="controls">  
+			  <input type="text" value="{{unitcost}}" class="input-xlarge" id="unitcost">
+            </div>  
+          </div>
+          <div class="form-actions">
+          <input type="button" id="additem" class="btn btn-primary" value="Save Changes"> 
+          <input type="button" id="itemlist" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+
+       <script type="text/javascript"> 
+              
+       $(document).ready(function() {    	   
+    	   $("#itemlist").click(function() {
+    		   window.open("/item", "_self");
+    	   });
+    	   
+       		$("#additem").click(function() {
+       			var id = $("#facilityname").html();
+       			var itemcode = $("#itemcode").val();
+       			var itemname = $("#itemname").val();
+				var packsize = $("#packsize").val;
+       			var unitcost = $("#unitcost").val();
+       			$.post("/item/editdata",
+       			  {
+       				id:id,
+       			    code: itemcode,
+       			    name: itemname,
+       			    packsize: packsize,
+       			    unitcost: unitcost
+       			  },
+       			  function(data, status) {
+       				  console.log(data);
+       				  console.log(status);
+       				  if (status != "Error") {
+       					$("#itemname").val("");
+       					$("#itemcode").val("");
+       					$("#packsize").val("");
+       					$("#unitcost").val("");
+           			    alert("Facility: " + facilityname +  " saved successfully");
+           			    window.open("/facility", "_self");
+       				  }
+       				  else {
+       					  alert("Error adding facility!");
+       				  }
+       				  
+       			    
+       			  });
+       		});
+       });  
+
+	   </script>
+
+{% endblock %}
+

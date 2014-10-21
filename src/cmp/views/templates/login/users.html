@@ -1,0 +1,48 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+  <legend>User List</legend>
+      <button id="addUser"  class="btn" onclick="window.location.href='{{context}}/home/users'">Add User</button> <br/><br/><br/>
+	<div id="userslist"></div>
+
+<script type="text/javascript">
+ 
+ var oTable;
+$(document).ready(function() {
+	
+	
+    $('#userslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $.getJSON("/home/user_list", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+        	{ "sTitle": "User ID" },
+            { "sTitle": "First Name" },
+            { "sTitle": "Other Name" },
+            { "sTitle": "User Name" },
+            { "sTitle": "Role" },
+            { "sTitle": "Last Login", "sClass": "center" }          
+        ],
+        
+         "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var id = aData[0];
+			$('td:eq(0)', nRow).html( '<a href= "/home/edit/ ' +id + ' ">' + id + '</a>' );
+			
+			return nRow;
+		},
+        
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+
+</script>
+
+{% endblock %}

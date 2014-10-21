@@ -1,0 +1,62 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend>Add New District</legend>
+          <div class="control-group">  
+            <label class="control-label" for="districtname">District Name</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="districtname">  
+              <p class="help-block">Enter the name of the district above e.g. Kampala</p>  
+            </div>  
+          </div>   
+          <div class="control-group">  
+            <label class="control-label" for="regionname">Region Name</label>  
+            <div class="controls">  
+              <select id="regionname">
+    			<option selected = "selected" value="0">--Select Region--</option>
+  				<option value="5">Central</option>
+  				<option value="1">Northern</option>
+  				<option value="2">Eastern</option>
+  				<option value="3">Southern</option>
+  				<option value="4">Western</option>
+  			</select>
+  			<p class="help-block">Select one of the regions</p> 
+            </div>   
+          </div>  
+          <div class="form-actions">
+          <input type="button" id="adddistrict" class="btn btn-primary" value="Save Changes"> 
+          <input type="button" id="districtlist" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+
+       <script type="text/javascript">
+       
+       $(document).ready(function() {    	   
+    	   $("#districtlist").click(function() {
+    		   window.open("/district", "_self");
+    	   });
+    	   
+       		$("#adddistrict").click(function() {
+       			var districtname = $("#districtname").val();
+       			var regionname = $("#regionname option:selected").text();
+       			$.post("/district/adddata",
+       			  {
+       			    name: districtname,
+       			    region: regionname
+       			  },
+       			  function(data, status) {
+       				  $("#districtname").val("");
+       			    alert("District: " + districtname +  " added successfully");
+       			    
+       			  });
+       		});
+       });
+	</script>
+
+{% endblock %}
+

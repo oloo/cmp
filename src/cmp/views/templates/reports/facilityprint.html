@@ -1,0 +1,84 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>Facility Report</legend>
+
+&nbsp; &nbsp; <span>Select Zone: </span>
+  			 <select id="zone">
+    			<option selected = "selected" value="0">--All Zones--</option>
+  				<option value="5">Zone 1</option>
+  				<option value="5">Zone 2</option>
+  				<option value="5">Zone 3</option>
+  				<option value="5">Zone 4</option>
+  				<option value="5">Zone 6</option>
+  			</select>
+&nbsp; &nbsp; &nbsp; 
+ <span>Select District: </span>
+ <select id="district">
+    			<option selected = "selected" value="0">--All Districts--</option>
+  				<option value="5">Kampala</option>
+  				<option value="1">Jinja</option>
+  			</select>
+ &nbsp; &nbsp;
+ &nbsp; &nbsp;
+ 
+  <input type="button" id="filter" class="btn btn-primary" value="Filter Reports"> 
+ <hr/>
+    <div id="itemslist"></div>
+   <br>
+   <hr/>
+   <br>
+    <input type="button" id="print" class="btn btn-primary" value="Print Reports">
+ <script type="text/javascript">
+ 
+ 
+ var oTable;
+$(document).ready(function() {
+
+    $("#print").click(function() {
+        var ids = "";
+        $(":checkbox:checked").each(function (index) {
+            ids = ids + "-" + $(this).attr('id');
+        });
+        
+        window.open("/reports/facilityprint/print/" + ids, "_self");
+    });
+	
+    $('#itemslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $.getJSON("/reports/facilityprint/facilitydata", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+            { "sTitle": "Select", "sClass" : "center"},
+            { "sTitle": "Code" },
+            { "sTitle": "  Facility Name      " },   
+            { "sTitle": "Facility Level", "sClass": "center" },
+             { "sTitle": "Zone", "sClass": "center" },
+            { "sTitle": "Proc plans", "sClass": "center" },
+            { "sTitle": "Orders", "sClass": "center" },
+            { "sTitle": "Issues", "sClass": "center" }
+        ],
+        
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var code = aData[1];
+			$('td:eq(0)', nRow).html( '<input name="codes" type="checkbox" id="' + code + '"/>' );
+			//$('td:eq(1)', nRow).html( '<a href= "/reports/facility/one/' +code + '">' + code + '</a>' );
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+</script>
+
+{% endblock %}
+

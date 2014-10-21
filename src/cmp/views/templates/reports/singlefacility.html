@@ -1,0 +1,241 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+<style>
+img{ border-width: 10px;}
+
+#title1{
+    font-style: italic;
+}
+h4{
+font-style: italic;
+}
+.redText { color: red; }
+
+.clear { clear: both;}
+</style>
+
+
+<div class="container-fluid">
+<div class="leaderboard"> 
+<br/>
+</div>
+<br/>
+
+<div class="row" style="width: 100%">
+
+<h4>Facility Code: {{code}}</h4>
+<h4>Facility Name: {{name}}</h4>
+<hr>
+ &nbsp; &nbsp;  <span>Select Year: </span>
+  			 <select id="year">
+  			 <option selected = "selected" value="2013/14">2013/14</option>
+    			<option value="2012/13">2012/13</option>
+  				<option value="2011/12">2011/12</option>
+  			</select>
+
+&nbsp; &nbsp; &nbsp; 
+ <span>Select Cycle: </span>
+ <select id="ordercycle">
+    			<option selected = "selected" value="0">--All Cycles--</option>
+  				<option value="1">Cycle 1</option>
+  				<option value="2">Cycle 2</option>
+  				<option value="3">Cycle 3</option>
+  				<option value="4">Cycle 4</option>
+  				<option value="5">Cycle 5</option>
+  				<option value="6">Cycle 6</option>
+  			</select>
+ &nbsp; &nbsp;
+&nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+  <input type="button" id="filter" class="btn btn-primary" value="Filter Reports"> 
+</div>
+
+<hr/>
+
+<!--  <table style="border: none; width: 100%">
+	<tr>
+		<td width="50%">
+			<div id="graph1"  style="min-width: 230px; min-height: 350px; margin: 0 auto"> </div>
+		</td>
+		<td width= "50%">
+			<div  id="graph2" style="min-width: 230px; min-height: 350px; margin: 0 auto"> </div>
+		</td>
+	</tr>
+</table> -->
+
+<hr>
+<h4>Item Ordering Breakdown</h4>
+<hr/>
+    <div id="facilitylist"></div>
+   </div>
+
+  
+{% endblock %}
+
+<script type="text/javascript">
+
+var oTable;
+$(document).ready(function () {
+	
+ /*   $('#graph1').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: ' Ordering Performance '
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+        	percentageDecimals: 1
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                        return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Item ordering conformance',
+            data: [
+                ['Orders < 80%',   20.0],
+                ['Order 80% - 120%',       30.0],
+                {
+                    name: 'Orders > 120%',
+                    y: 50.0
+                }
+            ]
+        }]
+    });
+        
+        
+        $('#graph2').highcharts({
+            chart: {
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 25
+            },
+            title: {
+                text: 'Cumulative Budget Performance',
+                x: -20 //center
+            },
+            subtitle: {
+                text: ' ',
+                x: -20
+            },
+            xAxis: {
+                categories: ['Cycle1', 'Cycle2', 'Cycle3', 'Cycle3', 'Cycle5', 'Cycle6']
+            },
+            yAxis: {
+                title: {
+                    text: 'Amount used (in `000)'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: ' '
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{
+                name: 'Planned Budget',
+                data: [500, 1000, 1500, 2000, 2500, 3000]
+            },{
+                name: 'Order Cost',
+                data: [600, 1200, 1700, 2300, 2700, 3600]
+            }, {
+                name: 'Issued Cost',
+                data: [600, 1200, 1700, 2200, 2550, 3300]
+            }]
+        }); */
+        
+        $('#facilitylist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+        
+        $("#filter").click(function() {
+        	var ordercycle = $("#ordercycle option:selected").val();
+    	    var year = $("#year option:selected").val();
+    	    
+    	    $("#example").dataTable().fnDestroy();
+    	    $("example").html("");
+    	    
+        	$.getJSON( "/reports/facility/facilitydatafilter/one", {ordercycle: ordercycle,
+        		                                            year: year, code: "{{code}}"})
+        	  .done(function( json ) {
+        		  oTable = $('#example').dataTable( {
+        	            "aaData": json,
+        	            "aoColumns": [
+        	                 { "sTitle": "Code" },
+        	                { "sTitle": "  Order Item Description" },   
+        	                { "sTitle": "Amount Planned", "sClass": "center" },
+        	                { "sTitle": "Amount Ordered", "sClass": "center" },
+        	                { "sTitle": "Amount Issued", "sClass": "center" },            
+        	                { "sTitle": "Order-Plan Ratio", "sClass": "center" }, 
+        	                { "sTitle": "Issue-Plan Ratio", "sClass": "center" }
+        	            ],
+        	            "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+        	    			/* Append the grade to the default row class name */
+        	    			var code = aData[0];
+        	    			$('td:eq(0)', nRow).html( '<a href= "/reports/item/one/' +code + '">' + code + '</a>' );
+        	    			return nRow;
+        	    		},
+        	            "sDom": 'T<"clear">lfrtip',
+        	        "oTableTools": {
+        	          "sSwfPath": "../../../datatables/swf/copy_csv_xls_pdf.swf"
+        	        }
+        	        } );
+        	  });
+        	
+        });
+        
+        $.getJSON("/reports/facility/facilitydata/{{code}}", function(json) {
+        	oTable = $('#example').dataTable( {
+            "aaData": json,
+            "aoColumns": [
+                 { "sTitle": "Code" },
+                { "sTitle": "  Order Item Description" },   
+                { "sTitle": "Amount Planned", "sClass": "center" },
+                { "sTitle": "Amount Ordered", "sClass": "center" },
+                { "sTitle": "Amount Issued", "sClass": "center" },            
+                { "sTitle": "Order-Plan Ratio", "sClass": "center" }, 
+                { "sTitle": "Issue-Plan Ratio", "sClass": "center" }
+            ],
+            "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+    			/* Append the grade to the default row class name */
+    			var code = aData[0];
+    			$('td:eq(0)', nRow).html( '<a href= "/reports/item/one/' +code + '">' + code + '</a>' );
+    			return nRow;
+    		},
+            "sDom": 'T<"clear">lfrtip',
+        "oTableTools": {
+          "sSwfPath": "../../../datatables/swf/copy_csv_xls_pdf.swf"
+        }
+        } );
+        
+        });;
+    
+});
+
+
+</script>
+

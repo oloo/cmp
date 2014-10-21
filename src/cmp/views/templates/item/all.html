@@ -1,0 +1,49 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>Item List</legend>
+      <button id="addItem" class="btn">Add Item</button> <br/><br/><br/>
+    <div id="itemslist"></div>
+    
+ <script type="text/javascript">
+ 
+ var oTable;
+$(document).ready(function() {
+	$("#addItem").click(function() {
+		window.open("/item/add" , "_self");	
+	});
+	
+    $('#itemslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $.getJSON("item/itemdata", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+             { "sTitle": "Code" },
+            { "sTitle": "Item Name" },
+            { "sTitle": "Category", "sClass": "center" },
+            { "sTitle": "Item Type", "sClass": "center" },          
+            { "sTitle": "Pack Size", "sClass": "center" },
+            { "sTitle": "Unit Cost", "sClass": "center" }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var code = aData[0];
+			$('td:eq(0)', nRow).html( '<a href= "/item/edit/' +code + '">' + code + '</a>' );
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+</script>
+
+{% endblock %}
+

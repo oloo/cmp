@@ -1,0 +1,314 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+<style>
+img{ border-width: 10px;}
+
+#title1{
+    font-style: italic;
+}
+h4{
+font-style: italic;
+}
+
+.clear { clear: both;}
+</style>
+
+
+<div class="container-fluid">
+<div class="leaderboard"> 
+<br/>
+ <img src="{{context}}/img/NMSLogo-full.jpg" class="pull-left" >  
+   <blockquote>  
+  <h2 id="title1" class="center"> &nbsp; &nbsp; &nbsp;  Commodity Management Platform</h2>  
+  <small>&nbsp; &nbsp; &nbsp; &nbsp; Managing Health Facilities' consumption, issues data and procurement plans</small>  
+</blockquote>
+</div>
+<br/>
+<hr>
+<div class="row" style="width: 100%">  
+<div class="span4" style="width: 50%">  
+<h4>Import Data</h4>  
+<p>Procurement Plans <a class="btn btn-success btn-small" href="/importdata">Import Data</a></p> 
+<p>Order Forms   &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; <a class="btn btn-success btn-small" href="/importdata">Import Data</a></p> 
+
+</div>  
+<div class="span4" style="width: 43%">  
+<h4>View Reports</h4>
+<p>Item Report  &nbsp;&nbsp; &nbsp; <a class="btn btn-success btn-small" href="/reports/item">View Report</a></p> 
+<p>Facility Report &nbsp;
+<a class="btn btn-success btn-small" href="/reports/facility">View Report</a></p> 
+<p>Facility Printout
+<a class="btn btn-success btn-small" href="/reports/facilityprint">View Report</a></p> 
+</div>  
+  
+</div>  
+
+<hr>
+
+<div class="row" style="width: 100%">  
+<div id= "budgetUtilization" class="span4" style="width: 50%">  
+
+</div>
+ 
+<div id= "itemDeviation" class="span4" style="width: 43%">  
+<h4>Items with highest plan/order deviation</h4> 
+<table id="tb1">
+	<thead>
+		<tr>
+			<th>Item Name</th>
+			<th># Planned</th>
+			<th># Ordered</th>
+			<th>% Deviation</th>
+		</tr>
+	</thead>
+	<tbody></tbody>
+</table>
+
+</div> 
+
+
+</div>
+
+<hr>
+
+<div class="row" style="width: 100%">  
+<div id= "orderingPerformance" class="span4" style="width: 50%">  
+<h4>Item ordering performance for Financial year to date</h4>
+
+</div> 
+<div id= "issuesPerformance" class="span4" style="width: 43%">  
+<h4>Item issues performance for Financial year to date</h4> 
+
+</div> 
+  
+</div>  
+<hr style="margin: 5px">
+
+
+<table style="border: none; width: 100%">
+	<tr>
+		<td width="50%">
+			<div id="graph1"  style="min-width: 230px; height: 300px; margin: 0 auto"> </div>
+		</td>
+		<td width= "50%">
+			<div  id="graph2" style="min-width: 200px; height: 300px; margin: 0 auto"> </div>
+		</td>
+	</tr>
+</table>
+<hr style="margin: 5px">
+<table style="border: none; width: 100%">
+	<tr>
+
+		<td width= "100%">
+			<div  id="graph3" style="min-width: 300px; height: 400px; margin: 0 auto"> </div>
+		</td>
+	</tr>
+</table>
+   </div>
+
+  
+{% endblock %}
+
+<script type="text/javascript">
+
+function checkForCycleData (arrayData, cycle) {
+	for(var index = 0; index < arrayData.length; index++) {
+		if (arrayData[index].cycle == cycle) {
+			return arrayData[index];
+		}
+	}
+	return null;
+}
+
+function getPercentageOfOrders(arrayData, cycle) {
+	var data;
+	if(data = checkForCycleData(arrayData, cycle)) {
+		return data.orders;
+	}
+	return 0;
+}
+
+$(document).ready(function () {
+	
+	Highcharts.setOptions({
+	     colors: [ '#FF9655', '#50B432', '#243BE5','#ED561B', '#DDDF00', '#64E572','#FFF263','#6AF9C4' ]
+	    });
+	
+	$.getJSON( "/home/facility_expenditure")
+        .done(function(result) {
+        	var htmlString = "<h4>Facilities with highest budget utilization to date</h4> ";
+        	for (var i = 0; i < 3; i++) {     		
+        		htmlString = htmlString + "<p> " + result[i].name + "-" + parseFloat(result[i].expenditure).toFixed(2) + "%</p>";
+        	}
+        	htmlString = htmlString + "<p><a class='btn btn-success btn-small' href='#'>See Full List</a></p>";
+        	$("#budgetUtilization").html(htmlString);
+        });
+	
+	
+		$.getJSON( "/home/item_order_deviation")
+        .done(function(result) {
+        	var htmlString ="<h4>Items with highest plan/order deviation</h4>";
+        	var tr;
+			for(var i =0; i < 3; i++){
+				tr = $('<tr/>');
+				tr.append("<td>" + result[i].itemname + "</td>");
+				tr.append("<td>"+ result[i].planned + "</td>");
+				tr.append("<td>"+ result[i].ordered + "</td>");
+				tr.append("<td>"+ result[i].itemdeviation + "</td>");
+				$('table#tb1 tbody').append(tr);
+			}
+        });
+        
+        
+		$.getJSON( "/home/item_ordering_performance")
+        .done(function(result) {
+        	
+        	 $('#graph1').highcharts({
+        	        chart: {
+        	            plotBackgroundColor: null,
+        	            plotBorderWidth: null,
+        	            plotShadow: false
+        	        },
+        	        title: {
+        	            text: ' Ordering Performance '
+        	        },
+        	        tooltip: {
+        	    	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+        	        	percentageDecimals: 1
+        	        },
+        	        plotOptions: {
+        	            pie: {
+        	                allowPointSelect: true,
+        	                cursor: 'pointer',
+        	                dataLabels: {
+        	                    enabled: true,
+        	                    color: '#000000',
+        	                    connectorColor: '#000000',
+        	                    formatter: function() {
+        	                        return '<b>'+ this.point.name +'</b>: '+ parseFloat(this.percentage).toFixed(2) +' %';
+        	                    }
+        	                }
+        	            }
+        	        },
+        	        series: [{
+        	            type: 'pie',
+        	            name: 'Item ordering conformance',
+        	            data: [
+                            {
+                             name: 'Orders > 120%',
+                              y: result.over
+                            },
+        	                ['Orders < 80%',   result.less],
+        	                ['Order 80% - 120%',       result.within]  	                
+        	            ]
+        	        }]
+        	    });	        	
+        });
+		
+		$.getJSON( "/home/item_issues_performance")
+        .done(function(result) {
+        	
+        	 $('#graph2').highcharts({
+        	        chart: {
+        	            plotBackgroundColor: null,
+        	            plotBorderWidth: null,
+        	            plotShadow: false
+        	        },
+        	        title: {
+        	            text: ' Issues Performance '
+        	        },
+        	        tooltip: {
+        	    	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+        	        	percentageDecimals: 1
+        	        },
+        	        plotOptions: {
+        	            pie: {
+        	                allowPointSelect: true,
+        	                cursor: 'pointer',
+        	                dataLabels: {
+        	                    enabled: true,
+        	                    color: '#000000',
+        	                    connectorColor: '#000000',
+        	                    formatter: function() {
+        	                        return '<b>'+ this.point.name +'</b>: '+ parseFloat(this.percentage).toFixed(2) +' %';
+        	                    }
+        	                }
+        	            }
+        	        },
+        	        series: [{
+        	            type: 'pie',
+        	            name: 'Item issues conformance',
+        	            data: [
+        	                   {
+           	                    name: 'Issues > 120%',
+           	                    y: result.over
+           	                   },
+        	                  ['Issues < 80%',   result.less],
+        	                  ['Issues 80% - 120%',       result.within]
+        	               
+        	            ]
+        	        }]
+        	    });	        	
+        });
+				
+		
+		$.getJSON( "/home/facility_order_percentage")
+        .done(function(result) {
+        	
+        var numberOfFacilities = result[0].total;	
+        	
+		 $('#graph3').highcharts({
+	            chart: {
+	                type: 'line',
+	                marginRight: 130,
+	                marginBottom: 25
+	            },
+	            title: {
+	                text: 'Percentage of Facilities Ordering',
+	                x: -20 //center
+	            },
+	            subtitle: {
+	                text: ' ',
+	                x: -20
+	            },
+	            xAxis: {
+	            	title: {
+	                    text: 'Order Cycles'
+	                },
+	                categories: ['C1', 'C2', 'C3', 'C3', 'C5', 'C6']
+	            },
+	            yAxis: {
+	                title: {
+	                    text: 'Percentage of Facilities'
+	                },
+	                plotLines: [{
+	                    value: 0,
+	                    width: 1,
+	                    color: '#808080'
+	                }]
+	            },
+	            tooltip: {
+	                valueSuffix: ' '
+	            },
+	            legend: {
+	                layout: 'vertical',
+	                align: 'right',
+	                verticalAlign: 'top',
+	                x: -10,
+	                y: 100,
+	                borderWidth: 0
+	            },
+	            series: [{
+	                name: 'Total Ordering',
+	                data: [ getPercentageOfOrders(result, 1), getPercentageOfOrders(result, 2), getPercentageOfOrders(result, 3),
+	                        getPercentageOfOrders(result, 4), getPercentageOfOrders(result, 5), getPercentageOfOrders(result, 6)]
+	            }]
+	        });
+        });
+});
+
+
+</script>
+

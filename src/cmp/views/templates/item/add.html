@@ -1,0 +1,199 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend>Add New Item</legend>
+          <div class="control-group">  
+            <label class="control-label" for="itemcode">Item Code</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="itemcode">  
+              <p class="help-block">Enter the unique item code e.g. 130009</p>  
+            </div>  
+          </div>
+            <div class="control-group">  
+            <label class="control-label" for="itemname">Item Name</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="itemname">  
+              <p class="help-block">Enter item name e.g. DENTAL MERCURY 500GM</p>  
+            </div>  
+          </div>
+            <div class="control-group">  
+            <label class="control-label" for="category">Category</label>  
+            <div class="controls"> 
+              <select id="category">
+               <option selected = "selected" value="0">--Select Category--</option>
+                  
+                  {% for category in categories %}
+                  	<option value={{category.id}}>{{category.name}}</option>
+                  {% endfor %}
+              </select>
+              <p class="help-block">Select category e.g.DENTAL SUPPLIES</p>  
+            </div>  
+          </div>
+          
+                <div class="control-group">  
+            <label class="control-label" for="category">Type</label>  
+            <div class="controls"> 
+              <select id="type">
+               <option selected = "selected" value="0">--Select Type--</option>
+                  <option value="1">CDC</option>
+                  <option value="2">CRH</option>
+                  <option value="3">CRL</option>
+                  <option value="4">None</option>
+              </select>
+              <p class="help-block">Select Type e.g.CRH</p>  
+            </div>  
+          </div>
+          
+             <div class="control-group">  
+            <label class="control-label" for="category">Order Type</label>  
+            <div class="controls"> 
+              <select id="ordertype">
+               <option selected = "selected" value="0">--Select Order Type--</option>
+                  <option value="1">Regular</option>
+                  <option value="2">Special</option>
+                  <option value="3">TBW</option>
+              </select>
+              <p class="help-block">Select Order Type e.g Regular</p>  
+            </div>  
+          </div>
+          
+             <div class="control-group">  
+            <label class="control-label" for="itemsource">Source</label>  
+            <div class="controls"> 
+              <select id="itemsource">
+               <option selected = "selected" value="0">--Select Source--</option>
+                  <option value="1">CDC</option>
+                  <option value="2">NMS</option>
+                  <option value="3">TPT</option>
+                  <option value="4">None</option>
+              </select>
+              <p class="help-block">Select Type e.g.NMS</p>  
+            </div>  
+          </div>
+          
+             <div class="control-group">  
+            <label class="control-label" for="itemclassification">Classification</label>  
+            <div class="controls"> 
+              <select id="itemclassification">
+               <option selected = "selected" value="0">--Select VEN Type--</option>
+                  <option value="1">Vital</option>
+                  <option value="2">Essential</option>
+                  <option value="3">Normal</option>
+                  <option value="4">None</option>
+              </select>
+              <p class="help-block">Select Classification e.g. Vital</p>  
+            </div>  
+          </div>
+          
+             <div class="control-group">  
+            <label class="control-label" for="itemclass">Class</label>  
+            <div class="controls"> 
+              <select id="itemclass">
+               <option selected = "selected" value="0">--Select Class--</option>
+                  <option value="1">SUPPLIES</option>
+                  <option value="2">LABORATORY</option>
+                  <option value="3">MEDICINES</option>
+                  <option value="4">RADIONUCLIDES</option>
+                  <option value="5">RECORDS</option>
+                  <option value="6">None</option>
+              </select>
+              <p class="help-block">Select Class</p>  
+            </div>  
+          </div>
+          
+             <div class="control-group">  
+            <label class="control-label" for="category">Account</label>  
+            <div class="controls"> 
+              <select id="itemaccount">
+               <option selected = "selected" value="0">--Select Account--</option>
+                  <option value="1">CDC</option>
+                  <option value="2">CRH</option>
+                  <option value="3">CRL</option>
+                  <option value="4">None</option>
+              </select>
+              <p class="help-block">Select Account e.g.CDC</p>  
+            </div>  
+          </div>
+          
+          <div class="control-group">  
+            <label class="control-label" for="packsize">Pack Size</label>  
+            <div class="controls">  
+               <input type="text" class="input-xlarge" id="packsize">  
+              <p class="help-block">Enter pack size in digits only! e.g. 23</p>  
+            </div>   
+          </div>
+          <div class="control-group">  
+            <label class="control-label" for="unitcost">Unit Cost</label>  
+            <div class="controls">  
+               <input type="text" class="input-xlarge" id="unitcost">  
+              <p class="help-block">Enter unit cost in digits only! e.g. 4000</p>  
+            </div>   
+          </div>
+          <div class="form-actions">
+          <input type="button" id="additem" class="btn btn-primary" value="Save Changes"> 
+          <input type="button" id="itemlist" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+ <script type="text/javascript">
+       
+       $(document).ready(function() {    	   
+    	   $("#itemlist").click(function() {
+    		   window.open("/facility", "_self");
+    	   });
+    	   
+    	   
+    	   $("#additem").click(function() {
+    			var itemname = $("#itemname").val();
+       			var itemcode = $("#itemcode").val();
+       			var packsize = $("#packsize").val();
+       			var category = $("#category option:selected").val();
+       			var type = $("#type option:selected").val();
+       			var ordertype = $("#ordertype option:selected").val();
+       			var itemsource = $("#itemsource option:selected").val();
+       			var itemclassification = $("#itemclassification option:selected").val();
+       			var itemclass = $("#itemclass option:selected").val();
+       			var itemaccount = $("#itemaccount option:selected").val();
+       			var unitcost = $("#unitcost").val();
+       			
+       			
+       			$.post("/item/adddata",
+       			  {
+       			    name: itemname,
+       			    code: itemcode,
+       			    packsize: packsize,
+       			    category: category,
+       			    unitcost: unitcost,
+       			    type: type,
+       			    ordertype: ordertype,
+       			    itemsource: itemsource,
+       			    itemclassification: itemclassification,
+       			    itemclass: itemclass,
+       			    itemaccount: itemaccount
+       			  },
+       			  function(data, status) {
+       				  console.log(data);
+       				  console.log(status);
+       				  if (status != "Error") {
+       					$("#itemname").val("");
+       					$("#itemcode").val("");
+       					$("#packsize").val("");
+       					$("#unitcost").val("");
+       					//$("#category").val("");
+           			    alert("Item: " + itemname +  " added successfully");
+       				  }
+       				  else {
+       					  alert("Error adding item!");
+       				  }
+       				  
+       			    
+       			  });
+    	   });
+       });
+ </script>
+{% endblock %}
+

@@ -1,0 +1,124 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>Facility Report</legend>
+
+&nbsp; &nbsp;  <span>Select Year: </span>
+  			 <select id="year">
+  			 <option selected = "selected" value="2013/14">2013/14</option>
+    			<option value="2012/13">2012/13</option>
+  				<option value="2011/12">2011/12</option>
+  			</select>
+
+&nbsp; &nbsp; &nbsp;
+  			
+  			&nbsp;  <span>Select Level: </span>
+  			 <select id="level">
+    			<option selected = "selected" value="0">All Levels</option>
+    			<option value="9">Ministry of Health</option>
+    			<option value="8">National Referral Institute</option>
+    			<option value="7">National Referral Hospital</option>
+  				<option value="6">Regional Referral Hospital</option>
+  				<option value="5">Hospital</option>
+  				<option value="4">HC IV</option>
+  			</select>
+
+&nbsp; &nbsp; &nbsp;
+ 
+ 
+  <input type="button" id="filter" class="btn btn-primary" value="Filter Reports"> 
+ <hr/>
+    <div id="itemslist"></div>
+   
+    
+ <script type="text/javascript">
+ 	var loading;
+    function ShowProgress() {
+
+    	s = setTimeout(function () {
+
+                loading = $(".loading");
+                loading.show();
+                var top = Math.max($(window).height() / 2 - loading[0].offsetHeight / 2, 0);
+                var left = Math.max($(window).width() / 2 - loading[0].offsetWidth / 2, 0);
+                loading.css({ top: top, left: left });
+            }, 200);
+        }
+ 
+ 
+ var oTable;
+$(document).ready(function() {
+	ShowProgress();
+	
+    $('#itemslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    
+    $("#filter").click(function() {
+	    var level = $("#level option:selected").val();
+	    var year = $("#year option:selected").val();
+	    
+	    $("#example").dataTable().fnDestroy();
+	    $("example").html("");
+	    
+    	$.getJSON( "/reports/facility/facilitydatafilter", {level: level, year: year})
+    	  .done(function( json ) {
+        			oTable = $('#example').dataTable( {
+    		         "aaData": json,
+    		        "aoColumns": [
+    		             { "sTitle": "Code" },
+    		            { "sTitle": "  Facility Name      " },   
+    		            { "sTitle": "Level", "sClass": "center" },
+    		            { "sTitle": "Budget", "sClass": "center" }
+    		        ],
+    		        
+    		        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+    					/* Append the grade to the default row class name */
+    					var code = aData[0];
+    					$('td:eq(0)', nRow).html( '<a href= "/reports/facility/one/' +code + '">' + code + '</a>' );
+    					
+    					return nRow;
+    				},
+    		        "sDom": 'T<"clear">lfrtip',
+    		    "oTableTools": {
+    		      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    		    }
+    		    } );
+    	  });
+    	
+    });
+    $.getJSON("/reports/facility/facilitydata", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+             { "sTitle": "Code" },
+            { "sTitle": "  Facility Name      " },   
+            { "sTitle": "Level", "sClass": "center" },
+            { "sTitle": "Budget", "sClass": "center" }
+        ],
+        
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var code = aData[0];
+			$('td:eq(0)', nRow).html( '<a href= "/reports/facility/one/' +code + '">' + code + '</a>' );
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    loading.removeClass('loading');
+    loading.hide();
+    
+    });
+} );
+
+</script>
+<div class="loading" align="center">
+    <img src="../img/spinner.gif" alt="Loading" />
+    	Loading. Please wait....<br />
+    <br />
+
+{% endblock %}

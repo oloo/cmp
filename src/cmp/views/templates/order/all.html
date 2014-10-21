@@ -1,0 +1,48 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>Facility Order List</legend><br/><br/>
+    <div id="planslist"></div>
+    
+ <script type="text/javascript">
+ 
+ var oTable;
+$(document).ready(function() {
+	$("#addPlan").click(function() {
+		window.open("/order/add");	
+	});
+	
+    $('#planslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $.getJSON("/order/orderdata", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+            { "sTitle": "Order Id", "sClass": "center" },
+            { "sTitle": "Facility Name" },
+            { "sTitle": "Facility Level Date", "sClass": "center" },  
+            { "sTitle": "Cycle", "sClass": "center" },
+            { "sTitle": "Order Date", "sClass": "center" },           
+            { "sTitle": "Total Cost", "sClass": "center" }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var id = aData[0];
+			$('td:eq(0)', nRow).html( '<a href= "/order/one/' +id + '">' + id + '</a>' );
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+</script>
+
+{% endblock %}
+

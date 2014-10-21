@@ -1,0 +1,73 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend>Edit District</legend>
+          
+           <div class="control-group">  
+            <label class="control-label" for="districtname">District Id</label>  
+            <div class="controls">  
+              <span id="districtid">{{id}}</span>
+               <p class="help-block">This a system generated Id and cannot be changed</p>  
+            </div>  
+          </div>
+          
+          <div class="control-group">  
+            <label class="control-label" for="districtname">District Name</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" value=" {{name}}" id="districtname">
+              <p class="help-block">Enter the name of the district above e.g. Kampala</p>  
+            </div>  
+          </div>   
+          <div class="control-group">  
+            <label class="control-label" for="regionname">Region Name</label>  
+            <div class="controls">  
+              <select id="regionname" text="{{region}}">
+    			<option selected = "selected" value="0">--Select Region--</option>
+  				<option value="5">Central</option>
+  				<option value="1">Northern</option>
+  				<option value="2">Eastern</option>
+  				<option value="3">Southern</option>
+  				<option value="4">Western</option>
+  			</select>
+  			<p class="help-block">Select one of the regions</p> 
+            </div>   
+          </div>  
+          <div class="form-actions">
+          <input type="button" id="editdistrict" class="btn btn-primary" value="Save Changes"> 
+          <input type="button" id="districtlist" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+
+       <script type="text/javascript">
+       
+       $(document).ready(function() {    	   
+    	   $("#districtlist").click(function() {
+    		   window.open("/district", "_self");
+    	   });
+    	   
+       		$("#editdistrict").click(function() {
+       			var districtid = $("#districtid").html();
+       			var districtname = $("#districtname").val();
+       			var regionname = $("#regionname option:selected").text();
+       			$.post("/district/editdata",
+       			  {
+       				id: districtid,
+       			    name: districtname,
+       			    region: regionname
+       			  },
+       			  function(data, status) {
+       			    alert("District: " + districtname +  " edited successfully");
+       			    window.open("/district", "_self");
+       			    
+       			  });
+       		});
+       });
+	</script>
+
+{% endblock %}
+

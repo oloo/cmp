@@ -1,0 +1,80 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>Data Import Report</legend>
+
+&nbsp; 
+ <hr/>
+    <div id="itemslist"></div>
+   
+    
+ <script type="text/javascript">
+ function generateInput(isTrue) {
+	 
+	 if (isTrue) {
+	   return '<input type="checkbox" disabled="disabled" checked="checked"></input>';
+	 }
+	 else {
+	   return' <input type="checkbox" disabled="disabled"></input>';
+	 }
+ }
+ var oTable;
+$(document).ready(function() {
+	
+    $('#itemslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $.getJSON("/reports/importdata/facilitydata", function(json) {
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+             { "sTitle": "Code" },
+            { "sTitle": "  Facility Name      " }, 
+            { "sTitle": "Facility Level", "sClass": "center" },
+            { "sTitle": "Zone", "sClass": "center" },
+            { "sTitle": "ProcPlan", "sClass": "center" },
+            { "sTitle": "Cycle 1", "sClass": "center" },
+            { "sTitle": "Cycle 2", "sClass": "center" },
+            { "sTitle": "Cycle 3", "sClass": "center" },
+            { "sTitle": "Cycle 4", "sClass": "center" },
+            { "sTitle": "Cycle 5", "sClass": "center" },
+            { "sTitle": "Cycel 6", "sClass": "center" },
+        ],
+        
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var code = aData[0];
+			var hasprocplan = aData[4];
+			var hascycle1 = aData[5];
+			var hascycle2 = aData[6];
+			var hascycle3 = aData[7];
+			var hascycle4 = aData[8];
+			var hascycle5 = aData[9];
+			var hascycle6 = aData[10];
+			
+			$('td:eq(0)', nRow).html( '<a href= "/reports/facility/one/' +code + '">' + code + '</a>' );
+			//$('td:eq(3)', nRow).html( '<input type="checkbox"></input>' );
+			
+			$('td:eq(4)', nRow).html(generateInput(hasprocplan));
+			$('td:eq(5)', nRow).html(generateInput(hascycle1));
+			$('td:eq(6)', nRow).html(generateInput(hascycle2));
+			$('td:eq(7)', nRow).html(generateInput(hascycle3));
+			$('td:eq(8)', nRow).html(generateInput(hascycle4));
+			$('td:eq(9)', nRow).html(generateInput(hascycle5));
+			$('td:eq(10)', nRow).html(generateInput(hascycle6));
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+</script>
+
+{% endblock %}
+

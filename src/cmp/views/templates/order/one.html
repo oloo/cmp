@@ -1,0 +1,142 @@
+ {% extends "cmp/views/templates/base-edit-table.html" %} 
+ {% block content %}
+
+<legend>Order Details</legend>
+<div class="container-fluid">
+<h3>Health Facility: {{facilityname}}</h3>
+<h4>Year: 2013/2014 </h4>
+<h4>Facility Order Total:  {{totalcost}}</h4>
+<br />
+<input type="button" id="delete-order" class="btn btn-primary" value="Delete Order"> 
+<br/>
+<br/>
+<div id="ppContainer" style="width: 100%;"></div>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function () {
+	
+	$("#delete-order").click(function(event){
+		event.stopPropagation();
+		if(confirm("Do you want to delete this order?")) {
+			this.click;			
+		 	$.post("/order/delete",
+			 	{
+			 		id: {{id}}
+			 	},
+			 	function(data, status){
+				 alert("This order has been successfully deleted")
+				 window.open("/order", "_self");
+			 });
+		}
+		else
+		{
+			window.open("/order", "_self");
+		}       
+		event.preventDefault();
+	});
+
+	var facilityorderid = $("#facilityorderid").html();
+	
+    $('#ppContainer').jtable({
+        title: 'Facility Order',
+        paging: false, //Enable paging
+        sorting: false, //Enable sorting
+        //openChildAsAccordion: true, //Enable this line to show child tabes as accordion style
+        actions: {
+            listAction: '/order/categorydata/' + {{id}},
+            deleteAction: '/MasterChild.aspx/DeleteStudent',
+            updateAction: '/MasterChild.aspx/UpdateStudent',
+            createAction: '/MasterChild.aspx/CreateStudent'
+        },
+        fields: {
+            categoryid: {
+				key: true,
+				create: false,
+				edit: false,
+				list: false
+			},
+            //CHILD TABLE DEFINITION FOR "ITEMS"
+            items: {
+                title: '',
+                width: '5%',
+                sorting: false,
+                edit: false,
+                create: false,
+                listClass: 'child-opener-image-column',
+                display: function (itemdetails) {
+                    //Create an image that will be used to open child table
+                    var $img = $('<img class="child-opener-image" src="/img/list_object.png" title="Show Items" />');
+                    //Open child table when user clicks the image
+                    $img.click(function () {
+                        $('#ppContainer').jtable('openChildTable',
+                            $img.closest('tr'),
+                            {
+                                title: itemdetails.record.categoryname + ' - Order Items',
+                                actions: {
+                                    listAction: '/order/itemdata/' + {{id}} + '-' + itemdetails.record.categoryid,
+                                    deleteAction: '/MasterChild.aspx/DeletePhone',
+                                    updateAction: '',
+                                    createAction: '/MasterChild.aspx/CreatePhone'
+                                },
+                                fields: {
+                                    categoryid: {
+                                        type: 'hidden',
+                                        defaultValue: itemdetails.record.categoryid
+                                    },
+                                    itemid: {
+                                        key: true,
+                                        create: false,
+                                        edit: false,
+                                        list: false
+                                    },
+                                    code: {
+                                        title: 'Code',
+                                        width: '15%'
+                                    },
+                                    itemname: {
+                                        title: 'Description',
+                                        width: '50%'
+                                    },
+                                    unit: {
+                                        title: 'Unit',
+                                        width: '10%'
+                                    },
+                                    price: {
+                                        title: 'Price',
+                                        width: '10%'
+                                    },
+                                    quantity: {
+                                        title: 'Quantity',
+                                        width: '10%'
+                                    },
+                                    total: {
+                                        title: 'Total',
+                                        width: '13%'
+                                    },
+                                }
+                            }, function (data) { //opened handler
+                                data.childTable.jtable('load');
+                            });
+                    });
+                    //Return image to show on the person row
+                    return $img;
+                }
+            },
+           categoryname: {
+				title: 'Category Name',
+				width: '90%'
+			}
+        }
+    });
+
+    //Load person list from server
+    $('#ppContainer').jtable('load');
+
+});
+
+	</script>
+
+{% endblock %}
+

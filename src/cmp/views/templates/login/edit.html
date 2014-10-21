@@ -1,0 +1,168 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal" id="form1">  
+        <fieldset>  
+          <legend>Edit User</legend>
+          
+           <div class="control-group">  
+            <label class="control-label" for="userid">User Id</label>  
+            <div class="controls">  
+              <span id="id">{{id}}</span>
+               <p class="help-block">This is a system generated Id and cannot be changed</p>  
+            </div>  
+          </div>
+          
+          <div class="control-group">
+          	<label class="control-label" for="firstname">First Name</label>   
+            <div class="controls"> 
+              <input type="text" class="input-xlarge" value="{{firstname}}" id="fname">
+            </div>  
+          </div>   
+          <div class="control-group">
+            <label class="control-label" for="othertname">Other Name</label>  
+            <div class="controls"> 
+              <input type="text" class="input-xlarge" value="{{othername}}" id="oname">
+            </div>  
+          </div> 
+          <div class="control-group">  
+            <label class="control-label" for="username">User Name</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" value="{{username}}" id="uname">
+            </div>  
+          </div>   
+          <div class="control-group">  
+            <label class="control-label" for="usertype">Role</label>  
+            <div class="controls">  
+              <select id="userrole" value="{{usertype_id}}">
+    			<option value="0">--Select Role--</option>
+  				<option value="1">Admin</option>
+  				<option value="2">User</option>
+  				<option value="3">Manager</option>
+  			</select>
+  			<p class="help-block">Please Select a Role</p> 
+            </div>   
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="password1">Reset Password</label>  
+            <div class="controls"> 
+              <input type="password" class="input-xlarge" value="{{passwd}}" id="password1" name="password1">
+            </div>  
+          </div> 
+          <div class="control-group">  
+            <label class="control-label" for="password2">Confirm Password</label>  
+            <div class="controls">  
+              <input type="password" class="input-xlarge" value="{{passwd}}" id="password2" name="password2">
+            </div>  
+          </div>  
+          <div class="form-actions">
+          <input type="button" id="save" class="btn btn-primary" value="Update">
+          <input type="button" id="del" class="btn btn-primary" value="Delete">  
+          <input type="button" id="exit" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+
+    <script type="text/javascript">
+   $(document).ready(function(){
+   		       			
+		$(function(){
+			$('select[value]').each(function(){
+			$(this).val(this.getAttribute("value"));
+			});
+		});
+   
+   		$("#form1").validate({
+       				rules:{
+       					password1:{
+       						required: true,
+       						minlength: 5
+       					},
+       					password2: {
+       						required: true,
+       						minlength: 5,
+       						equalTo: "#password1"
+       					}
+       				},
+       				
+       				messages:{
+       					password1:{
+       						required: "Please Enter a password",
+       						minlength: "Password Must be atleast 5 characters long!"
+       					},
+       					password2:{
+       						required: "Please Enter a password",
+       						minlength: "Password must be atleast 5 characters long!",
+       						equalTo: "Please enter the same Password as above"
+       					}
+       				}
+       				
+       	});
+ 
+    	$("#exit").click(function() {
+			window.open("/home/users", "_self");
+    	});
+		   
+ 
+       	$("#save").click(function() {
+       		var userid = $("#id").html();
+       		var firstname = $("#fname").val();
+       		var othername = $("#oname").val();
+       		var username = $("#uname").val();
+       		var usertype = $("#userrole option:selected").text();
+       		var passwd =$("#password2").val();
+       		if(usertype == "Admin"){
+       			usertype = 1
+       		};	
+       		if(usertype == "User"){
+       			usertype = 2
+       		};
+       		if(usertype == "Manager"){
+       			usertype = 3
+       		};
+       		$.post("/home/edituser",
+       			{
+					id: userid,
+       			    firstname: firstname,
+       			    othername: othername,
+       			    username: username,
+       			    usertype: usertype,
+       			    passwd: passwd
+       			},
+       			function(data, status) {
+					alert("User: " + firstname +  " edited successfully");
+       			    window.open("/home/users", "_self");
+       			    
+       		});
+       	});
+       	
+       		$("#del").click(function(event){
+				event.stopPropagation();
+				if(confirm("Do you want to delete?")) {
+					this.click;
+					var userid = $("#id").html();
+       				var firstname =$("#fname").val();
+				 	$.post("/home/delete_user",
+					 	{
+					 		id: userid
+					 	},
+					 	function(data, status){
+						 alert("User: "+ firstname + " has been successfully deleted")
+						 window.open("/home/users", "_self");
+					 });
+				}
+				else
+				{
+					window.open("/home/users", "_self");
+				}       
+				event.preventDefault();
+   
+			});
+    	   
+    });    		
+	</script>
+
+{% endblock %}
+

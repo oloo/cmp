@@ -1,0 +1,48 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+  <legend>District List</legend>
+      <button id="addDistrict" class="btn btn-primary">Add District</button> <br/><br/><br/>
+    <div id="districtslist"></div>
+    
+ <script type="text/javascript">
+ 
+ var oTable;
+$(document).ready(function() {
+	$("#addDistrict").click(function() {
+		window.open("/district/add", "_self");	
+	});
+	
+    $('#districtslist').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
+    $('#example').html('<img href="../img/spinner.gif"/>');
+    $.getJSON("district/districtdata", function(json) {
+    	//$('#example').html('');    	
+    	oTable = $('#example').dataTable( {
+        "aaData": json,
+        "aoColumns": [
+			{ "sTitle": "Id", "sClass": "center" },
+            { "sTitle": "District Name", "sClass": "center" },
+            { "sTitle": "Region", "sClass": "center"  }
+        ],
+        "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+			/* Append the grade to the default row class name */
+			var id = aData[0];
+			$('td:eq(0)', nRow).html( '<a href= "/district/edit/' +id + '">' + id + '</a>' );
+			
+			return nRow;
+		},
+        "sDom": 'T<"clear">lfrtip',
+    "oTableTools": {
+      "sSwfPath": "../datatables/swf/copy_csv_xls_pdf.swf"
+    }
+    } );
+    
+    });
+} );
+
+</script>
+
+{% endblock %}
+

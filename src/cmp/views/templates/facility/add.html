@@ -1,0 +1,238 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend>Add New Facility</legend>
+          <div class="control-group">  
+            <label class="control-label" for="facilitycode">Facility Code</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="facilitycode">  
+              <p class="help-block">Enter the unique facility code e.g. APA305ED</p>  
+            </div>  
+          </div>
+            <div class="control-group">  
+            <label class="control-label" for="facilityname">Facility Name</label>  
+            <div class="controls">  
+              <input type="text" class="input-xlarge" id="facilityname">  
+              <p class="help-block">Enter facility name e.g. MULAGO HOSPITAL</p>  
+            </div>  
+          </div>
+          <div class="control-group">  
+            <label class="control-label" for="level">Facility Level</label>  
+            <div class="controls">  
+              <select id="level">
+    			<option selected = "selected" value="0">--Select Level--</option>
+  				<option value="1">HC I</option>
+  				<option value="2">HC II</option>
+  				<option value="3">HC III</option>
+  				<option value="4">HC IV</option>
+  				<option value="5">HOSPITAL</option>
+  				<option value="6">REGIONAL REFERRAL HOSPITAL</option>
+  				<option value="7">NATIONAL REFERRAL HOSPITAL</option>
+  				<option value="8">NATIONAL REFERRAL INSTITUTE</option>
+  				<option value="9">MINISTRY OF HEALTH</option>
+  			</select>
+  			<p class="help-block">Select one of the appropriate Health Centre level</p> 
+            </div>   
+          </div>
+           <div class="control-group">  
+            <label class="control-label" for="district">District</label>  
+            <div class="controls">  
+              <select id="district">     
+               <option selected = "selected" value="0">--Select District--</option>         
+              <option value="1">ABIM</option>
+<option value="1">ADJUMANI</option>
+<option value="1">AGAGO</option>
+<option value="1">ALEBTONG</option>
+<option value="1">AMOLATAR</option>
+<option value="1">AMUDAT</option>
+<option value="1">AMURIA</option>
+<option value="1">AMURU</option>
+<option value="1">APAC</option>
+<option value="1">ARUA</option>
+<option value="1">BUDAKA</option>
+<option value="1">BUDUDA</option>
+<option value="1">BUGIRI</option>
+<option value="1">BUHWEJU</option>
+<option value="1">BUIKWE</option>
+<option value="1">BUKEDEA</option>
+<option value="1">BUKOMANSIMBI</option>
+<option value="1">BUKWO</option>
+<option value="1">BULAMBULI</option>
+<option value="1">BULIISA</option>
+<option value="1">BUNDIBUGYO</option>
+<option value="1">BUSHENYI</option>
+<option value="1">BUSIA</option>
+<option value="1">BUTALEJA</option>
+<option value="1">BUTAMBALA</option>
+<option value="1">BUVUMA</option>
+<option value="1">BUYENDE</option>
+<option value="1">DOKOLO</option>
+<option value="1">GOMBA</option>
+<option value="1">GULU</option>
+<option value="1">HOIMA</option>
+<option value="1">IBANDA</option>
+<option value="1">IGANGA</option>
+<option value="1">ISINGIRO</option>
+<option value="1">Jinja</option>
+<option value="1">KAABONG</option>
+<option value="1">KABALE</option>
+<option value="1">KABAROLE</option>
+<option value="1">KABERAMAIDO</option>
+<option value="1">KALANGALA</option>
+<option value="1">KALIRO</option>
+<option value="1">KALUNGU</option>
+<option value="1">KAMPALA</option>
+<option value="1">KAMULI</option>
+<option value="1">KAMWENGE</option>
+<option value="1">KANUNGU</option>
+<option value="1">KAPCHORWA</option>
+<option value="1">KASESE</option>
+<option value="1">KATAKWI</option>
+<option value="1">KAYUNGA</option>
+<option value="1">KIBAALE</option>
+<option value="1">KIBOGA</option>
+<option value="1">KIBUKU</option>
+<option value="1">KIRUHURA</option>
+<option value="1">KIRYANDONGO</option>
+<option value="1">KISORO</option>
+<option value="1">KITGUM</option>
+<option value="1">KOBOKO</option>
+<option value="1">KOLE</option>
+<option value="1">KOTIDO</option>
+<option value="1">KUMI</option>
+<option value="1">KWEEN</option>
+<option value="1">KYANKWANZI</option>
+<option value="1">KYEGEGWA</option>
+<option value="1">KYENJOJO</option>
+<option value="1">LAMWO</option>
+<option value="1">LIRA</option>
+<option value="1">LUUKA</option>
+<option value="1">LUWEERO</option>
+<option value="1">LWENGO</option>
+<option value="1">LYANTONDE</option>
+<option value="1">MANAFWA</option>
+<option value="1">MARACHA</option>
+<option value="1">MASAKA</option>
+<option value="1">Masindi</option>
+<option value="1">MAYUGE</option>
+<option value="1">MBALE</option>
+<option value="1">MBARARA</option>
+<option value="1">MITOOMA</option>
+<option value="1">MITYANA</option>
+<option value="1">MOROTO</option>
+<option value="1">MOYO</option>
+<option value="1">MPIGI</option>
+<option value="1">MUBENDE</option>
+<option value="1">Mukono</option>
+<option value="1">NAKAPIRIPIRIT</option>
+<option value="1">NAKASEKE</option>
+<option value="1">NAKASONGOLA</option>
+<option value="1">NAMAYINGO</option>
+<option value="1">NAMUTUMBA</option>
+<option value="1">NAPAK</option>
+<option value="1">NEBBI</option>
+<option value="1">NGORA</option>
+<option value="1">NTOROKO</option>
+<option value="1">NTUNGAMO</option>
+<option value="1">NWOYA</option>
+<option value="1">OTUKE</option>
+<option value="1">OYAM</option>
+<option value="1">PADER</option>
+<option value="1">PALLISA</option>
+<option value="1">RAKAI</option>
+<option value="1">RUBIRIZI</option>
+<option value="1">Rukungiri</option>
+<option value="1">SEMBABULE</option>
+<option value="1">SERERE</option>
+<option value="1">SHEEMA</option>
+<option value="1">SIRONKO</option>
+<option value="1">SOROTI</option>
+<option value="1">TORORO</option>
+<option value="1">WAKISO</option>
+<option value="1">YUMBE</option>
+<option value="1">ZOMBO</option>
+              </select>
+              <p class="help-block">Select district from autocomplete box above</p>  
+            </div>  
+          </div>
+           <div class="control-group">  
+            <label class="control-label" for="ccregion">Region</label>  
+            <div class="controls">  
+              <select id="ccregion">
+    			<option selected = "selected" value="0">--Select Region--</option>
+  				<option value="5">Jinja Cetral</option>
+  				<option value="1">Kampala Central</option>
+  			</select>
+            </div>   
+          </div> 
+             <div class="control-group">  
+            <label class="control-label" for="zone">Zone</label>  
+            <div class="controls">  
+              <select id="zone">
+    			<option selected = "selected" value="0">--Select Zone--</option>
+  				<option value="1">ZONE 1</option>
+  				<option value="2">ZONE 2</option>
+  				<option value="3">ZONE 3</option>
+  				<option value="4">ZONE 4</option>
+  				<option value="5">ZONE 5</option>
+  				<option value="6">ZONE 6</option>
+  				<option value="7">ZONE 7</option>
+  			</select> 
+            </div>   
+          </div> 
+          <div class="form-actions">
+          <input type="button" id="addfacility" class="btn btn-primary" value="Save Changes"> 
+          <input type="button" id="facilitylist" class="btn" value="Cancel"> 
+          </div>  
+        </fieldset>  
+</form>
+
+       <script type="text/javascript">
+       
+       $(document).ready(function() {    	   
+    	   $("#facilitylist").click(function() {
+    		   window.open("/facility", "_self");
+    	   });
+    	   
+       		$("#addfacility").click(function() {
+       			var facilityname = $("#facilityname").val();
+       			var facilitycode = $("#facilitycode").val();
+       			var level = $("#level option:selected").val();
+       			var district = $("#district option:selected").text();
+       			var region = $("#ccregion option:selected").text();
+       			var zone = $("#zone option:selected").text();
+       			
+       			$.post("/facility/adddata",
+       			  {
+       			    name: facilityname,
+       			    code: facilitycode,
+       			    ccregion: region,
+       			    zone: zone,
+       			    levelid: level,
+       			    districtname: district
+       			  },
+       			  function(data, status) {
+       				  console.log(data);
+       				  console.log(status);
+       				  if (status != "Error") {
+       					$("#facilityname").val("");
+       					$("#facilitycode").val("");
+       					$("#district").val("");
+           			    alert("Facilities: " + facilityname +  " added successfully");
+       				  }
+       				  else {
+       					  alert("Error adding facility!");
+       				  }
+       				  
+       			    
+       			  });
+       		});
+       });
+		</script>
+
+{% endblock %}
+

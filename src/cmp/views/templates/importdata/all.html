@@ -1,0 +1,58 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+
+<legend>Import Data</legend>
+<h5 style= "color:blue" id="error">{{error}}</h5>
+
+
+<form action="/importdata/procurementplan" method="POST" enctype="multipart/form-data" class="form-horizontal">  
+        <fieldset>          
+          <div class="control-group">  
+            <label class="control-label" for="importprocurementplans">Import Procurement Plans</label>  
+            <div class="controls">  
+             <input class="input-file" id="importprocurementplans"  name="procplan[]" id="procplan" type="file" multiple>
+             <input type="submit" id="importprocurementplansbtn" class="btn btn-primary" value="Import">             
+            </div>
+          </div>
+     </fieldset>  
+</form>
+<br/>
+<hr>        
+        <form action="/importdata/facilityorder" method="POST" enctype="multipart/form-data" class="form-horizontal">  
+        <fieldset> 
+          <div class="control-group">  
+            <label class="control-label" for="importconsumptiondata">Import Order Forms</label>  
+            <div class="controls">  
+             <select id="cycle" name="cycle">
+    			<option selected = "selected" value="0">Select Cycle (leave for default)</option>
+  				<option value="1">Cycle 1</option>
+  				<option value="2">Cycle 2</option>
+  				<option value="3">Cycle 3</option>
+  				<option value="4">Cycle 4</option>
+  				<option value="5">Cycle 5</option>
+  				<option value="6">Cycle 6</option>
+  			</select>
+  			&nbsp; &nbsp;
+  			<input class="input-file" id="order" name="order[]" type="file" multiple>
+             <input type="submit" id="importconsumptiondatabtn" class="btn btn-primary" value="Import"> 
+              <p class="help-block">Import Order Forms</p>  
+            </div>  
+          </div> 
+        </fieldset>  
+        </form>
+        
+        <script type="text/javascript">
+
+$(document).ready(function () {
+	
+	var error = $("#error").html();
+	if(error != "" && error != "Import") {
+		alert("Data Import has run. Please look at the log at the top of the page.");
+	}
+});
+</script>
+
+{% endblock %}
+

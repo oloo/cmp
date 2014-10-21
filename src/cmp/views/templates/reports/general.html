@@ -1,0 +1,264 @@
+
+{% extends "cmp/views/templates/base.html" %}
+
+{% block content %}
+<style>
+img{ border-width: 10px;}
+
+#title1{
+    font-style: italic;
+}
+h4{
+font-style: italic;
+}
+
+.clear { clear: both;}
+</style>
+
+
+<div class="container-fluid">
+<div class="leaderboard"> 
+<br/>
+</div>
+<br/>
+
+<div class="row" style="width: 100%">
+
+
+ &nbsp; &nbsp; <span>Select Region: </span>
+  			 <select id="year">
+    			<option selected = "selected" value="0">All Regions</option>
+  				<option value="5">Central Region</option>
+  				<option value="5">Northern Region</option>
+  				<option value="5">South Western Region</option>
+  				<option value="5">Western Region</option>
+  				<option value="5">Eastern Region</option>
+  			</select>
+  			
+  			&nbsp; &nbsp;  <span>Select Year: </span>
+  			 <select id="year">
+    			<option selected = "selected" value="0">2012/2013</option>
+  				<option value="5">2011/2012</option>
+  			</select>
+
+&nbsp; &nbsp; &nbsp; 
+ <span>Select Cycle: </span>
+ <select id="cycle">
+    			<option selected = "selected" value="0">--All Cycles--</option>
+  				<option value="5">Cycle 1</option>
+  				<option value="1">Cycle 2</option>
+  				<option value="2">Cycle 3</option>
+  				<option value="3">Cycle 4</option>
+  				<option value="4">Cycle 5</option>
+  				<option value="4">Cycle 6</option>
+  			</select>
+ &nbsp; &nbsp;
+  <input type="button" id="filter" class="btn btn-primary" value="Filter Reports"> 
+</div>
+
+<hr/>
+
+<table style="border: none; width: 100%">
+	<tr>
+		<td width="50%">
+			<div id="graph1"  style="min-width: 230px; min-height: 350px; margin: 0 auto"> </div>
+		</td>
+		<td width= "50%">
+			<div  id="graph3" style="min-width: 230px; min-height: 350px; margin: 0 auto"> </div>
+		</td>
+	</tr>
+		<tr>
+		<td width="50%">
+			<div id="graph2"  style="min-width: 230px; height: 350px; margin: 0 auto"> </div>
+		</td>
+		<td width= "50%">
+			<div  id="graph4" style="min-width: 200px; height: 350px; margin: 0 auto"> </div>
+		</td>
+	</tr>
+</table>
+   </div>
+
+  
+{% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function () {
+	
+    $('#graph1').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: ' Ordering Performance '
+        },
+        tooltip: {
+    	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+        	percentageDecimals: 1
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    color: '#000000',
+                    connectorColor: '#000000',
+                    formatter: function() {
+                        return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Item ordering conformance',
+            data: [
+                ['Orders < 80%',   20.0],
+                ['Order 80% - 120%',       30.0],
+                {
+                    name: 'Orders > 120%',
+                    y: 50.0
+                }
+            ]
+        }]
+    });
+
+        $('#graph4').highcharts({
+            chart: {
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 25
+            },
+            title: {
+                text: 'Number of Items Ordered',
+                x: -20 //center
+            },
+            subtitle: {
+                text: ' ',
+                x: -20
+            },
+            xAxis: {            	
+            	categories: ['Cycle1', 'Cycle2', 'Cycle3', 'Cycle3', 'Cycle5', 'Cycle6']
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Items'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: ' '
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{
+                name: 'Items Ordering',
+                data: [2300, 2200, 2100, 2150, 2225, 2275]
+            }]
+        });
+        
+        $('#graph3').highcharts({
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: ' Budget Performance '
+            },
+            tooltip: {
+        	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            	percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Item ordering conformance',
+                data: [
+                    ['Over budget',   90.0],
+                    ['Under Budget',       6.0],
+                    {
+                        name: 'Within Budget',
+                        y: 4.0
+                    }
+                ]
+            }]
+        });
+        
+        $('#graph2').highcharts({
+            chart: {
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 25
+            },
+            title: {
+                text: 'Facilities Ordering',
+                x: -20 //center
+            },
+            subtitle: {
+                text: ' ',
+                x: -20
+            },
+            xAxis: {
+                categories: ['Cycle1', 'Cycle2', 'Cycle3', 'Cycle3', 'Cycle5', 'Cycle6']
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of Facilities'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: ' '
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{
+                name: 'Total Ordering',
+                data: [500, 530, 520, 510, 490, 520]
+            }, {
+                name: 'Correct Orders',
+                data: [350, 500, 420, 450, 450, 400]
+            }]
+        });
+    
+});
+
+
+</script>
+
